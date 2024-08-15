@@ -1,12 +1,12 @@
 /*
  🔥 APP: Weather App
 
- These are the promises you'll need to create
+ 
  =============================================
     1. currentWeather - Gets the current weather
     2. forecast - Gets 5 day forecast
 
-These are all the functions you'll need to build
+
 ================================================
     1. getWeatherData() - Runs both promises then updates the DOM by running...
     2. updateDom() - Updates the DOM with the data from the promises and runs the...
@@ -16,8 +16,8 @@ These are all the functions you'll need to build
         - this will be a helper function only
  */
 
-// Get DOM Elements
-// Hint: All required elements have an ID attribute in the HTML file (a total of 17 elements)
+//  DOM Elements
+
 const currentTemperature = document.getElementById('currentTemp')
 const weatherIcon = document.getElementById('weatherIcon')
 const weatherDescription = document.getElementById('weatherDescription')
@@ -36,7 +36,7 @@ const time = document.getElementById('time')
 const date = document.getElementById('date')
 const searchInput = document.getElementById('searchInput')
 
-// Create an array of month names
+// array of month names
 const monthNames = [
   'January',
   'February',
@@ -53,13 +53,13 @@ const monthNames = [
 ]
 
 const getWeatherData = async () => {
-  // Use the try-catch block to handle errors
+  //  try-catch block to handle errors
   try {
-    // Create a const that stores the user input from the searchbar or defaults back to 'Los Angeles' if left blank
+    // const that stores the user input from the searchbar or defaults back to 'Los Angeles' if left blank
     const city = searchInput.value || 'Los Angeles'
 
-    // Create 2 promises that call the APIs and pass in the city name
-    // If the user haven't typed anything, use Los Angeles as default
+    // 2 promises that call the APIs and pass in the city name
+    // If the user haven't typed anything, Los Angeles will be default
     const currentWeather = new Promise(async (resolve, reject) => {
       try {
         const weatherApiData = await fetch(
@@ -84,18 +84,17 @@ const getWeatherData = async () => {
       }
     })
 
-    // Using the Promise.all method, wait for both promises to resolve, and save the returned data in a variable
+   
     const data = await Promise.all([currentWeather, forecast])
 
-    // Now pass that data into the updateDom() function
+ 
     updateDom(data)
   } catch (error) {
     console.log(error)
   }
 }
 
-// Create a function that returns a cardinal direction based on the degree passed in
-// Hint: Draw a Circle and Visualize each Direction First. It will help... A ton!
+
 const getDirection = deg => {
   switch (true) {
     case deg < 22.5:
@@ -118,7 +117,7 @@ const getDirection = deg => {
 }
 
 /**
- * Update each DOM element with the API data
+ * Updating each DOM element with the API data
  */
 const updateDom = data => {
   console.log('🔥 updating', data)
@@ -126,8 +125,7 @@ const updateDom = data => {
   currentTemperature.innerText = data[0].main.temp.toFixed(1)
 
   // Weather Icon
-  // Use template literals to insert the in the below link, then set it as image source:
-  // https://openweathermap.org/img/wn/API_RESPONSE_DATA@2x.png
+  
   weatherIcon.src = `https://openweathermap.org/img/wn/${data[0].weather[0].icon}@2x.png`
 
   // Description of the Current Weather
@@ -136,7 +134,7 @@ const updateDom = data => {
   // Wind Speed
   windSpeed.innerText = data[0].wind.speed.toFixed(1)
 
-  // Wind Direction (Use the getDirection function)
+  // Wind Direction 
   windDirection.innerText = getDirection(data[0].wind.deg)
 
   // Lowest Temperature of the Day
@@ -151,38 +149,38 @@ const updateDom = data => {
   // Humidity
   humidity.innerText = data[0].main.humidity
 
-  // Save both Sunrise and Sunset time in a variable as Milliseconds
-  // Hint: the data from the API is in seconds
+  
+  // Sunset time 
   const sunriseTs = new Date(data[0].sys.sunrise * 1000)
   const sunsetTs = new Date(data[0].sys.sunset * 1000)
 
-  // Use the Sunrise Time in Milliseconds to get Sunrise Time
-  // use the .toLocaleString() method to get the time in a readable format
+
+  // Sunrise Time
   sunrise.innerText = sunriseTs.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
   })
 
-  // Do the same for Sunset
+  // Doing the same for Sunset
   sunset.innerText = sunsetTs.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
   })
 
-  // Using timeago.js, create relative timestamps for both sunrise and sunset
+  // Using timeago.js, creating relative timestamps for both sunrise and sunset
   sunriseRelative.innerText = timeago.format(sunriseTs)
   sunsetRelative.innerText = timeago.format(sunsetTs)
 
-  // Get the location of the user from the API (When you type, it's probably not formatted)
+  // Getting the location of the user from the API 
   userLocation.innerText = data[0].name
 
-  // Get and format Current Time
+  // Getting and format Current Time
   time.innerText = new Date(Date.now()).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
   })
 
-  // Get and format Current Date
+  // formating Current Date
   date.innerText = new Date(Date.now()).toLocaleString('en-US', {
     weekday: 'long',
     month: 'short',
@@ -190,13 +188,13 @@ const updateDom = data => {
     year: 'numeric',
   })
 
-  // Call the renderChart function and pass in the list array of the 2nd object in the data array
+  // Calling the renderChart function and passing in the list array of the 2nd object in the data array
   renderChart(data[1].list)
 }
 
-// Create a function that renders the chart
+// Creating a function that renders the chart
 const renderChart = data => {
-  // Store the DOM element that will hold the chart
+  // Storing the DOM element that will hold the chart
   const myChart = echarts.init(document.getElementById('chart'))
 
   const option = {
@@ -220,9 +218,9 @@ const renderChart = data => {
     ],
   }
 
-  // Using the given function from the documentation, generate the chart using the options above
+  // Using the given function from the documentation
   myChart.setOption(option)
 }
 
-// Call the getWeatherData function
+// Calling the getWeatherData function
 getWeatherData()
